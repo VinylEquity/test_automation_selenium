@@ -13,12 +13,9 @@
       And I should see the list of orders for the issuer selected
       When I click on new order button
       Then I should see the add new order page
-      And By default Treasury Order radio button should be selected
-#      And I enter the Treasury order name
-#      And I select issue from the drpdown
-#      And Description is disabled
-#      When I select reason for issuance from the dropdown
-#      Then Description is enabled
+      And I enter the Treasury order name And I select issue from the drpdown And Description is disabled
+      When I select reason for issuance from the dropdown
+      Then Description is enabled
 #      And I enter the description
 #      And I select the issuance date
 #      And I select the automatic release date and time

@@ -1,5 +1,7 @@
 # Treasury Orders steps
 #**********************
+import random
+import string
 import time, os
 from behave import *
 
@@ -31,7 +33,7 @@ def step_impl(context):
 
 @step(u'Create new order button is disabled And I should see Select an Issuer Profile')
 def step_impl(context):
-    time.sleep(10)
+    time.sleep(5)
     assert context.treasuryOrderPage.is_createTO_enabled() ==  False
     assert context.treasuryOrderPage.is_issuers_list_displayed() == True
 
@@ -57,14 +59,19 @@ def step_impl(context):
     time.sleep(5)
     assert context.driver.current_url == os.getenv('APP_HOST') + "issuers/treasury-orders/create?type=ISSUANCE"
 
-@step(u'By default Treasury Order radio button should be selected')
+@step(u'I enter the Treasury order name And I select issue from the drpdown And Description is disabled')
+def step_impl(context):
+    time.sleep(5)
+    context.treasuryOrderPage.fill_TO_name(f"Test {random.randint(1, 9999)}")
+    context.treasuryOrderPage.select_issue(3)
+    assert context.treasuryOrderPage.is_description_enabaled() == False
+
+
+@step(u'I select reason for issuance from the dropdown')
+def step_impl(context):
+    context.treasuryOrderPage.select_reason(8)
+
+@step(u'Description is enabled')
 def step_impl(context):
     time.sleep(30)
-    context.treasuryOrderPage.is_return_to_selected()
-    time.sleep(30)
-    # assert context.treasuryOrderPage.is_return_to_selected() == False
-    # assert context.treasuryOrderPage.is_to_selected() == True
-
-
-# @step(u'I enter the Treasury order name')
-# def
+    assert context.treasuryOrderPage.is_description_enabaled() == True

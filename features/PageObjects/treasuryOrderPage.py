@@ -15,7 +15,11 @@ class TreasuryOrderPage(PageFactory):
         'issuers_list': ('XPATH', '//*[@id="menu-"]/div[3]'),
         'to_list': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[2]/div/div[2]/table'),
         'create_to_radio': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[1]/div[2]/label[1]'),
-        'create_return_to_radio': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[1]/div[2]/label[2]')
+        'create_return_to_radio': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[1]/div[2]/label[2]'),
+        'to_name': ('XPATH', '//*[@id="__next"]/div[1]/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[1]/div[1]/div/div/input'),
+        'issue_list': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[1]/div[2]/div'),
+        'reason_list': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[1]/div[3]/div'),
+        'description': ('XPATH', '//*[@id="__next"]/div[1]/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[1]/div[4]/div/div/input')
     }
 
     def is_createTO_enabled(self):
@@ -35,9 +39,18 @@ class TreasuryOrderPage(PageFactory):
     def is_TO_table_displayed(self):
         return self.to_list.is_displayed()
 
-    def is_to_selected(self):
-        return self.create_to_radio.is_selected()
+    def fill_TO_name(self, name):
+        self.to_name.click()
+        self.to_name.send_keys(name)
 
-    def is_return_to_selected(self):
-        # self.create_return_to_radio.is_selected()
-        self.create_return_to_radio.click()
+    def select_issue(self, issue):
+        self.issue_list.click()
+        time.sleep(3)
+        self.driver.find_element(By.XPATH, f'//*[@id="menu-"]/div[3]/ul/li[{issue}]').click()
+
+    def is_description_enabaled(self):
+        return self.description.is_enabled()
+
+    def select_reason(self, reason):
+        self.reason_list.click()
+        self.driver.find_element(By.XPATH, f'//*[@id="menu-"]/div[3]/ul/li[{reason}]').click()
