@@ -73,5 +73,15 @@ def step_impl(context):
 
 @step(u'Description is enabled')
 def step_impl(context):
-    time.sleep(30)
+    time.sleep(5)
     assert context.treasuryOrderPage.is_description_enabaled() == True
+
+@step(u'I enter the description')
+def step_impl(context):
+    context.treasuryOrderPage.fill_description(f"Test {random.randint(1, 9999)}")
+
+@step(u'I select the effective and automatic release date and time')
+def step_impl(context):
+    context.treasuryOrderPage.select_effective_date()
+    context.treasuryOrderPage.select_auto_release_date_time()
+    time.sleep(30)

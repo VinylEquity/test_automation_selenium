@@ -1,7 +1,8 @@
 import time
-
 from selenium.webdriver.common.by import By
 from seleniumpagefactory.Pagefactory import PageFactory
+from features.steps.common_methods.get_current_et_time import get_et_time_index
+
 
 class TreasuryOrderPage(PageFactory):
     def __init__(self, driver):
@@ -19,7 +20,9 @@ class TreasuryOrderPage(PageFactory):
         'to_name': ('XPATH', '//*[@id="__next"]/div[1]/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[1]/div[1]/div/div/input'),
         'issue_list': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[1]/div[2]/div'),
         'reason_list': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[1]/div[3]/div'),
-        'description': ('XPATH', '//*[@id="__next"]/div[1]/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[1]/div[4]/div/div/input')
+        'description': ('XPATH', '//*[@id="__next"]/div[1]/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[1]/div[4]/div/div/input'),
+        'effective_date': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[2]/div[1]/div/div/div/div/button'),
+        'auto_release_date': ('XPATH', '//*[@id="__next"]/div/div/main/div/div[2]/div/div[2]/div[1]/div/div/div[2]/div[2]/div/div/div/div')
     }
 
     def is_createTO_enabled(self):
@@ -54,3 +57,19 @@ class TreasuryOrderPage(PageFactory):
     def select_reason(self, reason):
         self.reason_list.click()
         self.driver.find_element(By.XPATH, f'//*[@id="menu-"]/div[3]/ul/li[{reason}]').click()
+
+    def fill_description(self, description):
+        self.description.click()
+        self.description.send_keys(description)
+
+    def select_effective_date(self):
+        self.effective_date.click()
+        self.driver.find_element(By.CLASS_NAME, 'MuiPickersDay-today').click()
+
+    def select_auto_release_date_time(self):
+        self.auto_release_date.click()
+        hrs, mins = get_et_time_index()
+        if hrs == 12:
+            self.driver.find_element(By.XPATH, f'/html/body/div[6]/div[2]/div/div[1]/div/div[2]/ul[1]/li[{hrs + 11}]').click()
+        else:
+            self.driver.find_element(By.XPATH, f'/html/body/div[6]/div[2]/div/div[1]/div/div[2]/ul[1]/li[{hrs + 1}]').click()

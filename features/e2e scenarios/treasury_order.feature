@@ -16,12 +16,10 @@
       And I enter the Treasury order name And I select issue from the drpdown And Description is disabled
       When I select reason for issuance from the dropdown
       Then Description is enabled
-#      And I enter the description
-#      And I select the issuance date
-#      And I select the automatic release date and time
+      And I enter the description
+      And I select the effective and automatic release date and time
 #      And I select the Delivery Method from the dropdown
-#      And I select the toggle button Apply 1933 Act Legend to all shares? to NO
-#      And I select the toggle button Was board approval required for issuance? to NO
+#      And I select the toggle button Apply 1933 Act Legend to all shares? to NO And I select the toggle button Was board approval required for issuance? to NO
 #      When I select the toggle button Upload Pre-Signed Document? to YES
 #      Then I should see the upload signed document button
 #      When I click on upload signed document button
@@ -44,5 +42,5 @@
 #      Then I should see the error message "Please complete Quantity and Price on all rows with red boxes before Saving or Submitting the Order."
 #      And I enter the quantity and price
 #      When I click on submit button
-#      Then I should be resirected to Treasury Order Status page
+#      Then I should be redirected to Treasury Order Status page
 #      And status should be pending release
