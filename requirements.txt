@@ -26,3 +26,6 @@ urllib3==2.2.3
 webdriver-manager==4.0.2
 websocket-client==1.8.0
 wsproto==1.2.0
+
+playwright~=1.49.1
+pytz~=2024.2
