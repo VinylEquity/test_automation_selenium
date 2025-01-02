@@ -6,9 +6,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "This repository is used to run the automated test cases of Vinyl Equity, written in TypeScript using PlayWright framework",
   "devDependencies": {
     "@playwright/test": "^1.49.1",
-    "@types/node": "^22.10.2"
+    "@types/node": "^22.10.3"
   }
 }
