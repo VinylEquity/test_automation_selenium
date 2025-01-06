@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { signInPage } from '../../PageObjects/signInPage'
-import {mailHelper} from "../../support/mail.helper"
+// import {mailHelper} from "../../support/mail.helper"
 
 test.beforeEach(async ({ page }) => {
   await page.goto(process.env.HOST as string) // open the app
