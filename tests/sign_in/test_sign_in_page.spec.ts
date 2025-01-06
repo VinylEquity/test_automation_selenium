@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { signInPage } from '../../PageObjects/signInPage'
-// import {mailHelper} from "../../support/mail.helper"
+import {mailerMethods} from "../../support/mailer.methods"
+import { phoneVerificationPage } from '../../PageObjects/phoneVerificationPage';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(process.env.HOST as string) // open the app
@@ -30,13 +31,18 @@ test('Test sign in with wrong email format', async ({ page }) => {
 });
 
 test('Test TA login [Happy Path Test]', async ({page}) =>{
-
+  const SignInPage = new signInPage(page);
+  const PhoneVerificationPage = new phoneVerificationPage(page);
+  await SignInPage.login(process.env.TA_USER as string);
+  const message = await page.getByText('We have sent an email with').textContent();
+  await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.TA_USER as string));
+  await expect(page).toHaveURL(process.env.HOST as string + "verify/phone-number");
+  await PhoneVerificationPage.fill_otp();
+  await expect(page).toHaveURL(process.env.HOST as string + "dashboard");
 });
 
 test('Test IA login [Happy Path Test]', async ({page}) =>{
-  
 });
 
 test('Test RO login [Happy Path Test]', async ({page}) =>{
-  
 });
