@@ -41,6 +41,4 @@ export const mailHelper = {
         let link = $('a:contains("Log In")');
         return link.attr("href")
     },
-
-
 };

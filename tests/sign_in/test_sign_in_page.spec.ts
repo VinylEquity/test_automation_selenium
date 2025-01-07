@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { signInPage } from '../../PageObjects/signInPage'
-import {mailerMethods} from "../../support/mailer.methods"
+import { mailerMethods } from '../../support/mailer.methods';
 import { phoneVerificationPage } from '../../PageObjects/phoneVerificationPage';
 
 test.beforeEach(async ({ page }) => {
@@ -42,7 +42,35 @@ test('Test TA login [Happy Path Test]', async ({page}) =>{
 });
 
 test('Test IA login [Happy Path Test]', async ({page}) =>{
+  const SignInPage = new signInPage(page);
+  const PhoneVerificationPage = new phoneVerificationPage(page);
+  await SignInPage.login(process.env.IA_USER as string);
+  const message = await page.getByText('We have sent an email with').textContent();
+  await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.IA_USER as string));
+  await expect(page).toHaveURL(process.env.HOST as string + "verify/phone-number");
+  await PhoneVerificationPage.fill_otp();
+  await page.waitForTimeout(3000);
+  await expect(page).toHaveURL(process.env.HOST as string + "dashboard");
 });
 
 test('Test RO login [Happy Path Test]', async ({page}) =>{
+  const SignInPage = new signInPage(page);
+  const PhoneVerificationPage = new phoneVerificationPage(page);
+  await SignInPage.login(process.env.RO_USER as string);
+  const message = await page.getByText('We have sent an email with').textContent();
+  await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.RO_user as string));
+  await expect(page).toHaveURL(process.env.HOST as string + "verify/phone-number");
+  await PhoneVerificationPage.fill_otp();
+  await expect(page).toHaveURL(process.env.HOST as string + "portfolio");
+});
+
+test('Test invalid OTP', async ({page}) =>{
+  const SignInPage = new signInPage(page);
+  const PhoneVerificationPage = new phoneVerificationPage(page);
+  await SignInPage.login(process.env.RO_USER as string);
+  const message = await page.getByText('We have sent an email with').textContent();
+  await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.RO_user as string));
+  await expect(page).toHaveURL(process.env.HOST as string + "verify/phone-number");
+  await PhoneVerificationPage.fill_wrong_otp();
+  await PhoneVerificationPage.validate_otp_alert('Invalid verification code. Please enter a valid code.');
 });
