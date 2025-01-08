@@ -36,9 +36,9 @@ test('Test TA login [Happy Path Test]', async ({page}) =>{
   await SignInPage.login(process.env.TA_USER as string);
   const message = await page.getByText('We have sent an email with').textContent();
   await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.TA_USER as string));
-  await expect(page).toHaveURL(process.env.HOST as string + "verify/phone-number");
+  await page.waitForURL(process.env.HOST as string + "verify/phone-number")
   await PhoneVerificationPage.fill_otp();
-  await expect(page).toHaveURL(process.env.HOST as string + "dashboard");
+  await page.waitForURL(process.env.HOST as string + "dashboard");
 });
 
 test('Test IA login [Happy Path Test]', async ({page}) =>{
@@ -47,10 +47,10 @@ test('Test IA login [Happy Path Test]', async ({page}) =>{
   await SignInPage.login(process.env.IA_USER as string);
   const message = await page.getByText('We have sent an email with').textContent();
   await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.IA_USER as string));
-  await expect(page).toHaveURL(process.env.HOST as string + "verify/phone-number");
+  await page.waitForURL(process.env.HOST as string + "verify/phone-number");
   await PhoneVerificationPage.fill_otp();
   await page.waitForTimeout(3000);
-  await expect(page).toHaveURL(process.env.HOST as string + "dashboard");
+  await page.waitForURL(process.env.HOST as string + "dashboard");
 });
 
 test('Test RO login [Happy Path Test]', async ({page}) =>{
@@ -59,9 +59,9 @@ test('Test RO login [Happy Path Test]', async ({page}) =>{
   await SignInPage.login(process.env.RO_USER as string);
   const message = await page.getByText('We have sent an email with').textContent();
   await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.RO_user as string));
-  await expect(page).toHaveURL(process.env.HOST as string + "verify/phone-number");
+  await page.waitForURL(process.env.HOST as string + "verify/phone-number");
   await PhoneVerificationPage.fill_otp();
-  await expect(page).toHaveURL(process.env.HOST as string + "portfolio");
+  await page.waitForURL(process.env.HOST as string + "portfolio");
 });
 
 test('Test invalid OTP', async ({page}) =>{
@@ -70,7 +70,7 @@ test('Test invalid OTP', async ({page}) =>{
   await SignInPage.login(process.env.RO_USER as string);
   const message = await page.getByText('We have sent an email with').textContent();
   await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.RO_user as string));
-  await expect(page).toHaveURL(process.env.HOST as string + "verify/phone-number");
+  await page.waitForURL(process.env.HOST as string + "verify/phone-number");
   await PhoneVerificationPage.fill_wrong_otp();
   await PhoneVerificationPage.validate_otp_alert('Invalid verification code. Please enter a valid code.');
 });
