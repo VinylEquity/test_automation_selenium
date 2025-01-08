@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 import { signInPage } from '../../PageObjects/signInPage'
 import { mailerMethods } from '../../support/mailer.methods';
 import { phoneVerificationPage } from '../../PageObjects/phoneVerificationPage';
+import { dashboardPage } from '../../PageObjects/dashBoardPage';
+import { portfolioPage } from '../../PageObjects/portfolioPage';
 
 test.beforeEach(async ({ page }) => {
   await page.goto(process.env.HOST as string) // open the app
@@ -33,17 +35,21 @@ test('Test sign in with wrong email format', async ({ page }) => {
 test('Test TA login [Happy Path Test]', async ({page}) =>{
   const SignInPage = new signInPage(page);
   const PhoneVerificationPage = new phoneVerificationPage(page);
+  const DashboardPage = new dashboardPage(page);
   await SignInPage.login(process.env.TA_USER as string);
   const message = await page.getByText('We have sent an email with').textContent();
   await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.TA_USER as string));
   await page.waitForURL(process.env.HOST as string + "verify/phone-number")
   await PhoneVerificationPage.fill_otp();
   await page.waitForURL(process.env.HOST as string + "dashboard");
+  await DashboardPage.validate_username("Automation QA");
+  await DashboardPage.logout();
 });
 
 test('Test IA login [Happy Path Test]', async ({page}) =>{
   const SignInPage = new signInPage(page);
   const PhoneVerificationPage = new phoneVerificationPage(page);
+  const DashboardPage = new dashboardPage(page);
   await SignInPage.login(process.env.IA_USER as string);
   const message = await page.getByText('We have sent an email with').textContent();
   await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.IA_USER as string));
@@ -51,17 +57,22 @@ test('Test IA login [Happy Path Test]', async ({page}) =>{
   await PhoneVerificationPage.fill_otp();
   await page.waitForTimeout(3000);
   await page.waitForURL(process.env.HOST as string + "dashboard");
+  await DashboardPage.validate_username("Automation QA");
+  await DashboardPage.logout();
 });
 
 test('Test RO login [Happy Path Test]', async ({page}) =>{
   const SignInPage = new signInPage(page);
   const PhoneVerificationPage = new phoneVerificationPage(page);
+  const PortfolioPage = new portfolioPage(page);
   await SignInPage.login(process.env.RO_USER as string);
   const message = await page.getByText('We have sent an email with').textContent();
   await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.RO_user as string));
   await page.waitForURL(process.env.HOST as string + "verify/phone-number");
   await PhoneVerificationPage.fill_otp();
   await page.waitForURL(process.env.HOST as string + "portfolio");
+  await PortfolioPage.validate_username("automation");
+  await PortfolioPage.logout();
 });
 
 test('Test invalid OTP', async ({page}) =>{
