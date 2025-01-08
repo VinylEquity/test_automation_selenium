@@ -55,7 +55,6 @@ test('Test IA login [Happy Path Test]', async ({page}) =>{
   await page.goto(await mailerMethods.login_mail(message.substring(40,71), process.env.IA_USER as string));
   await page.waitForURL(process.env.HOST as string + "verify/phone-number");
   await PhoneVerificationPage.fill_otp();
-  await page.waitForTimeout(3000);
   await page.waitForURL(process.env.HOST as string + "dashboard");
   await DashboardPage.validate_username("Automation QA");
   await DashboardPage.logout();
