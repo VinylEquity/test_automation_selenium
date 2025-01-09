@@ -1,4 +1,4 @@
-# test_automation_playwright
+# playwright-automation
 This repository is used to run the automated test cases of Vinyl Equity, written in TypeScript using PlayWright framework
 
 ## Steps to run tests in local machine
