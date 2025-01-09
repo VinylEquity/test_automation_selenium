@@ -23,8 +23,6 @@ export const mailHelper = {
         let emails = await mailHelper.messageChecker(senderEmail, receiverEmail, subject);
         let startTime = Date.now();
         while (emails.length === 0 && Date.now() - startTime < 20000) {
-            console.log(`Polling mail from: ${senderEmail}...`);
-            await page.waitForTimeout(5000);
             emails = await mailHelper.messageChecker(
                 senderEmail,
                 receiverEmail,

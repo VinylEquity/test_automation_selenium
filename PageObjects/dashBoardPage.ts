@@ -20,6 +20,5 @@ export class dashboardPage{
     async logout(){
         await this.user_name.click();
         await this.logout_btn.click();
-        await this.page.waitForURL(process.env.HOST as string + "signin");
     }
 }

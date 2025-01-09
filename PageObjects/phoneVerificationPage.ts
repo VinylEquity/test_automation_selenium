@@ -21,7 +21,7 @@ export class phoneVerificationPage {
         this.invalid_otp_alert = page.locator('[id="__next"]').getByRole('alert');
     }
 
-    async fill_otp(){
+    async enter_valid_otp(){
         await this.char_1.fill('1');
         await this.char_2.fill('2');
         await this.char_3.fill('3');
@@ -30,7 +30,7 @@ export class phoneVerificationPage {
         await this.char_6.fill('6');
     }
 
-    async fill_wrong_otp(){
+    async enter_invalid_otp(){
         await this.char_1.fill('1');
         await this.char_2.fill('2');
         await this.char_3.fill('3');

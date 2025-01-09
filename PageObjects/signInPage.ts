@@ -17,7 +17,7 @@ export class signInPage {
         this.loginAlert = page.locator('[id="__next"]').getByRole('alert');
     }
     
-    async fill_email(email){
+    async enter_email(email){
         await this.email.fill(email);
     }
     
@@ -30,7 +30,7 @@ export class signInPage {
     }
 
     async login(email){
-        await this.fill_email(email);
+        await this.enter_email(email);
         await this.click_signin();
     }
 
