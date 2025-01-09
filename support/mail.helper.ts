@@ -4,7 +4,8 @@ import { resolve } from "path";
 const cheerio = require("cheerio");
 
 export const mailHelper = {
-    async messageChecker(fromEmail: string, toEmail: string, subject: string) {
+    async emailChecker(fromEmail: string, toEmail: string, subject: string) {
+        // calling gmail api to get the inbox messages
         const email = await get_messages(
             resolve(__dirname, "credentials.json"),
             resolve(__dirname, "token.json"),
@@ -20,10 +21,10 @@ export const mailHelper = {
     },
 
     async readEmail(page, senderEmail: string, receiverEmail: string, subject: string): Promise<string> {
-        let emails = await mailHelper.messageChecker(senderEmail, receiverEmail, subject);
+        let emails = await mailHelper.emailChecker(senderEmail, receiverEmail, subject);
         let startTime = Date.now();
         while (emails.length === 0 && Date.now() - startTime < 20000) {
-            emails = await mailHelper.messageChecker(
+            emails = await mailHelper.emailChecker(
                 senderEmail,
                 receiverEmail,
                 subject
