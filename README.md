@@ -7,6 +7,11 @@ This repository is used to run the automated test cases of Vinyl Equity, written
 3. Install the VS Code extension ```Playwright Test for VSCode``` which is verified by Microsoft
 4. Clone this repository 
 5. Open the Repository in your VSCode
+6. In the terminal run the following commands to install Playwright and browsers
+```
+npm install
+npx playwright install
+```
 6. Open the terminal and run the following command to make sure if the tests are running in your machine
 ```
 npx playwright test
