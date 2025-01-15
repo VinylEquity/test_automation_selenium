@@ -29,6 +29,15 @@ export class treasuryOrderPage {
     readonly price: Locator;
     readonly submit_order: Locator;
     readonly alert: Locator;
+    readonly release_date_error: Locator;
+    readonly to_status_header: Locator;
+    readonly to_pending_release_pending: Locator;
+    readonly to_compeleted_pending: Locator;
+    readonly status_tab: Locator;
+    readonly document_tab: Locator;
+    readonly details_tab: Locator;
+    readonly presigned_document: Locator;
+    readonly document_uploaded_icon: Locator;
 
     constructor(page: Page){
         this.page = page;
@@ -55,7 +64,16 @@ export class treasuryOrderPage {
         this.quantity = page.getByRole('cell', { name: '0', exact: true }).getByRole('textbox');
         this.price = page.getByRole('row', { name: 'Collapse Toggle select row' }).getByRole('textbox').first();
         this.submit_order = page.getByRole('button', { name: 'Submit Order' });
-        this.alert = page.locator('[id="__next"]').getByRole('alert')
+        this.alert = page.locator('[id="__next"]').getByRole('alert');
+        this.release_date_error =  page.getByText('Date/Time must be in the future', { exact: true });
+        this.to_status_header = page.getByText('Treasury Order Status', { exact: true });
+        this.to_pending_release_pending = page.locator('svg').filter({ hasText: '3' }).locator('circle');
+        this.to_compeleted_pending = page.locator('svg').filter({ hasText: '4' }).locator('circle');
+        this.status_tab = page.getByText('Status', { exact: true }).first();
+        this.document_tab = page.getByText('Documents', { exact: true });
+        this.details_tab = page.getByText('Details', { exact: true });
+        this.presigned_document = page.getByRole('button', { name: 'Treasury Order - Test 465 -' });
+        this.document_uploaded_icon = page.getByLabel('Uploaded');
     }
 
     async select_issuer(issuer){
@@ -74,10 +92,25 @@ export class treasuryOrderPage {
     async select_release_date_and_time(){
         var date = String(new Date().getDate()).padStart(2, '0');
         var time = new Date().toLocaleTimeString("en-US", {timeZone: 'America/New_York'}).split(':');
+        var hour = parseInt(time[0]);
+        var min = Math.ceil(parseInt(time[1])/5) * 5;
+        if(parseInt(time[1]) ==  min){
+            min = min + 5;  // if current ET time min and calculated min are same it will show error so adding 5 more mins 
+        } 
+        if(min == 60){
+            // if the calculated min is 60 then add 1 to hour and make min to zero
+            if(hour == 12){
+                hour = 1;
+            }
+            else{
+                hour = hour + 1; 
+            }
+            min = 0;
+        }
         await this.release_date.click();
         await this.page.getByRole('gridcell', { name: date }).nth(1).click();
-        await this.page.getByLabel(time[0] + ' hours', { exact: true }).click();
-        await this.page.getByLabel(Math.ceil(parseInt(time[1])/5) * 5 + ' minutes',  { exact: true }).click();
+        await this.page.getByLabel(hour + ' hours', { exact: true }).click();
+        await this.page.getByLabel(min + ' minutes',  { exact: true }).click();
         await this.release_date_time_ok.click();
     }
 
@@ -130,9 +163,36 @@ export class treasuryOrderPage {
     }
 
     async submit_TO(){
+        if(await this.release_date_error.count() != 0){
+            this.select_release_date_and_time(); // reselecting the release date/time again if automatic release time passed
+        }
         await expect(this.submit_order).toBeVisible();
         await this.submit_order.click();
+    }
+
+    async is_TO_submitted(){
         await expect(this.alert).toBeVisible();
         await expect(this.alert).toContainText('Order submitted successfully');
+        await expect(this.to_status_header).toContainText('Treasury Order Status');
+        await expect(this.to_compeleted_pending).toHaveCSS("color", "rgba(0, 0, 0, 0.38)");
+        await expect(this.to_pending_release_pending).toHaveCSS("color", "rgb(33, 150, 243)");
+    }
+
+    async validate_TO_details(name, description, reason, issuer, issue, quantity, delivery_method){
+        await this.details_tab.click();
+        await expect(this.page.getByText(name)).toBeVisible();
+        await expect(this.page.getByText(description)).toBeVisible();
+        await expect(this.page.getByText(reason)).toBeVisible();
+        await expect(this.page.getByLabel('Details').getByText(issuer)).toBeVisible();
+        await expect(this.page.getByText(issue)).toBeVisible();
+        await expect(this.page.getByText(quantity).first()).toBeVisible();
+        await expect(this.page.getByText(delivery_method, { exact: true })).toBeVisible();
+    }
+
+    async validate_TO_document(name){
+        await this.document_tab.click();
+        await expect(this.page.getByRole('button', { name: 'Treasury Order - ' + name + ' -' })).toBeVisible();
+        await this.status_tab.click();
+        await expect(this.document_uploaded_icon).toBeVisible();
     }
 }
